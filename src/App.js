@@ -94,8 +94,8 @@ function App() {
           <button
             onClick={handleResize}
             className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600"
-          >リサイズ<
-           /button> {/*押したら handleResize を実行して画像を再描画*/}
+            >リサイズ<
+          /button> {/*押したら handleResize を実行して画像を再描画*/}
         </div>
       )}
 
@@ -109,6 +109,9 @@ function App() {
             alt="Resized"
             className="max-w-full h-auto rounded shadow"
           />
+          <a href={resizedImage} download="resized-image.png">
+            <button className="mt-2 bg-green-500 text-white px-4 py-1 rounded hover:bg-green-600">画像をダウンロード</button>
+          </a>
         </div>
       )}
     </div>
