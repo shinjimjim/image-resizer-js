@@ -8,6 +8,7 @@ function App() {
   const [resizedImage, setResizedImage] = useState(null); //resizedImage：リサイズ後の画像のURL
   const [width, setWidth] = useState('');
   const [height, setHeight] = useState(''); //width / height：リサイズ時に入力するサイズ
+  const [fileName, setFileName] = useState('resized-image.png');
 
   //画像ファイルの読み込み処理
   const handleFileChange = (e) => { //画像ファイルが選ばれたときに呼ばれる関数。
@@ -109,9 +110,19 @@ function App() {
             alt="Resized"
             className="max-w-full h-auto rounded shadow"
           />
-          <a href={resizedImage} download="resized-image.png">
-            <button className="mt-2 bg-green-500 text-white px-4 py-1 rounded hover:bg-green-600">画像をダウンロード</button>
-          </a>
+
+          <div className="mt-2">
+            <input
+              type="text"
+              value={fileName}
+              onChange={(e) => setFileName(e.target.value)}
+              className="border px-3 py-1 rounded w-full"
+              placeholder="保存ファイル名（例：my-image.png）"
+            />
+            <a href={resizedImage} download={fileName}>
+              <button className="mt-2 bg-green-500 text-white px-4 py-1 rounded hover:bg-green-600">画像をダウンロード</button>
+            </a>
+          </div>
         </div>
       )}
     </div>
