@@ -1,5 +1,6 @@
-import React, { useState } from 'react'; //React の基本ライブラリを読み込みます。
+import React, { useState, useRef } from 'react'; //React の基本ライブラリを読み込みます。
 //useState は「状態（state）」を管理するための React の関数（フック）です。これは、関数コンポーネント内で状態（変数のようなもの）を保持・更新できるようにする仕組みです。
+//useRef：画像サイズ取得用に画像をDOMに直接アクセスするために使用。
 
 //React の「コンポーネント」と呼ばれる関数を定義しています。App はトップレベルの画面（メインUI）を表します。
 function App() {
@@ -13,6 +14,9 @@ function App() {
   const [originalWidth, setOriginalWidth] = useState(null);
   const [originalHeight, setOriginalHeight] = useState(null); //元画像のサイズ（読み込み時に取得）
   const [keepAspectRatio, setKeepAspectRatio] = useState(true); //アスペクト比固定 ON/OFF のスイッチ
+  const [quality, setQuality] = useState(0.92); // デフォルト品質（ブラウザ標準）quality：JPEG/WebPの場合の画質。
+
+  const originalImageRef = useRef(null); //useRef：直接画像DOM要素にアクセスしたいときに使用。
 
   //画像ファイルの読み込み処理
   const handleFileChange = (e) => { //画像ファイルが選ばれたときに呼ばれる関数。
@@ -74,7 +78,10 @@ function App() {
       const ctx = canvas.getContext('2d'); //canvas.getContext("2d")：2DグラフィックスAPIを取得（ペンのような役割）
       ctx.drawImage(img, 0, 0, canvas.width, canvas.height); //画像を指定サイズで描画（スケーリング）
 
-      const resizedDataUrl = canvas.toDataURL(format); //canvas.toDataURL()：canvas上の画像をBase64に変換（→再び<img>に使える）再エンコードして結果を取得
+      const resizedDataUrl = format === 'image/jpeg'
+        ? canvas.toDataURL(format, quality) // 品質適用
+        : canvas.toDataURL(format); //canvas.toDataURL()：canvas上の画像をBase64に変換（→再び<img>に使える）再エンコードして結果を取得
+
       setResizedImage(resizedDataUrl);
     };
   };
@@ -170,6 +177,24 @@ function App() {
               アスペクト比を固定する
             </label>
           </div>
+
+          {/* JPEG選択時のみスライダー表示 */}
+          {format === 'image/jpeg' && (
+            <div className="mt-2">
+              <label className="block text-sm font-medium text-gray-700">
+                JPEG品質: {quality}
+              </label>
+              <input
+                type="range"
+                min="0.1"
+                max="1"
+                step="0.01"
+                value={quality}
+                onChange={(e) => setQuality(parseFloat(e.target.value))}
+                className="w-full"
+              />
+            </div>
+          )}
         </div>
       )}
 
