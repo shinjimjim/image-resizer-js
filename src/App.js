@@ -15,6 +15,7 @@ function App() {
   const [originalHeight, setOriginalHeight] = useState(null); //元画像のサイズ（読み込み時に取得）
   const [keepAspectRatio, setKeepAspectRatio] = useState(true); //アスペクト比固定 ON/OFF のスイッチ
   const [quality, setQuality] = useState(0.92); // デフォルト品質（ブラウザ標準）quality：JPEG/WebPの場合の画質。
+  const [resizedSize, setResizedSize] = useState(null); // 圧縮後のファイルサイズ（バイト数を保持）
 
   const originalImageRef = useRef(null); //useRef：直接画像DOM要素にアクセスしたいときに使用。
 
@@ -83,6 +84,11 @@ function App() {
         : canvas.toDataURL(format); //canvas.toDataURL()：canvas上の画像をBase64に変換（→再び<img>に使える）再エンコードして結果を取得
 
       setResizedImage(resizedDataUrl);
+
+      // base64 からファイルサイズ（バイト数）を計算
+      const base64Length = resizedDataUrl.length - resizedDataUrl.indexOf(',') - 1;
+      const fileSizeBytes = Math.ceil(base64Length * 3 / 4); // Base64 → バイト数
+      setResizedSize(fileSizeBytes);
     };
   };
 
@@ -218,6 +224,12 @@ function App() {
               className="border px-3 py-1 rounded w-full"
               placeholder="保存ファイル名（拡張子なし）"
             />
+
+            {/*「圧縮後の画像ファイルサイズ（KB/MB）」を表示*/}
+            <p className="mt-2 text-sm text-gray-700">
+              ファイルサイズ: {(resizedSize / 1024).toFixed(2)} KB（{(resizedSize / 1024 / 1024).toFixed(2)} MB）
+            </p>
+
             {/*ダウンロードリンク*/}
             <a href={resizedImage} download={`${fileName}.${getExtension()}`}>
               <button className="mt-2 bg-green-500 text-white px-4 py-1 rounded hover:bg-green-600">画像をダウンロード</button>
