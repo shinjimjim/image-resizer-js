@@ -12,6 +12,7 @@ function App() {
   const [fileName, setFileName] = useState('resized-image'); //保存時のファイル名（拡張子なし）
   const [originalWidth, setOriginalWidth] = useState(null);
   const [originalHeight, setOriginalHeight] = useState(null); //元画像のサイズ（読み込み時に取得）
+  const [keepAspectRatio, setKeepAspectRatio] = useState(true); //アスペクト比固定 ON/OFF のスイッチ
 
   //画像ファイルの読み込み処理
   const handleFileChange = (e) => { //画像ファイルが選ばれたときに呼ばれる関数。
@@ -22,13 +23,14 @@ function App() {
     const reader = new FileReader();
     //ファイルの読み込みが完了したときに呼ばれる処理です。画像を読み込み、読み込まれた画像の元サイズ（幅/高さ）を取得。アスペクト比の元になる値として使います。
     reader.onload = () => {
-      const img = new Image();
-      img.src = reader.result;
-      img.onload = () => {
-        setOriginalWidth(img.width);
-        setOriginalHeight(img.height);
+      const image = new Image(); //new Image() を使って元画像の幅・高さを取得し、入力欄に初期表示
+      image.src = reader.result;
+      image.onload = () => {
+        setOriginalWidth(image.width);
+        setOriginalHeight(image.height);
+        setWidth(image.width);
+        setHeight(image.height);
       };
-
       setImageSrc(reader.result); //reader.result は Base64形式の画像データ（Data URL）で、imageSrc に保存します。
       setResizedImage(null); // 新しい画像を選んだら前の結果はリセット
     };
@@ -36,12 +38,13 @@ function App() {
     reader.readAsDataURL(file);
   };
 
+  //幅・高さ入力とアスペクト比の維持
   const handleWidthChange = (e) => {
     const newWidth = e.target.value;
     setWidth(newWidth);
 
-    if (originalWidth && originalHeight && newWidth) {
-      const aspectRatio = originalHeight / originalWidth;
+    if (keepAspectRatio && originalWidth && originalHeight) { //keepAspectRatio が true のとき、片方を変更するともう片方を自動計算
+      const aspectRatio = originalHeight / originalWidth; //height / width を使って元の縦横比を保つ
       setHeight(Math.round(newWidth * aspectRatio)); //ユーザーが幅だけ入力した場合、高さをアスペクト比から自動計算します。
     }
   };
@@ -50,7 +53,7 @@ function App() {
     const newHeight = e.target.value;
     setHeight(newHeight);
 
-    if (originalWidth && originalHeight && newHeight) {
+    if (keepAspectRatio && originalWidth && originalHeight) {
       const aspectRatio = originalWidth / originalHeight;
       setWidth(Math.round(newHeight * aspectRatio)); //逆に高さを入力した場合も同様に、幅を自動計算します。
     }
@@ -118,40 +121,55 @@ function App() {
 
       {/* 幅と高さの入力 + リサイズボタン */}
       {imageSrc && (
-        <div className="mt-4 flex gap-2 items-center">
-          {/*ユーザーが数字を入力できる <input type="number">。onChange で状態を更新 → 入力した数字が width に反映。入力した値は parseInt(width) で整数に変換して使います*/}
-          <input
-            type="number"
-            placeholder="幅(px)"
-            value={width}
-            onChange={handleWidthChange}
-            className="border px-2 py-1 rounded w-24"
-          />
-          <input
-            type="number"
-            placeholder="高さ(px)"
-            value={height}
-            onChange={handleHeightChange}
-            className="border px-2 py-1 rounded w-24"
-          />
+        <div className="mt-4 flex flex-col gap-2">
+          <div className="mt-4 flex gap-2 items-center">
+            {/*ユーザーが数字を入力できる <input type="number">。onChange で状態を更新 → 入力した数字が width に反映。入力した値は parseInt(width) で整数に変換して使います*/}
+            <input
+              type="number"
+              placeholder="幅(px)"
+              value={width}
+              onChange={handleWidthChange}
+              className="border px-2 py-1 rounded w-24"
+            />
+            <input
+              type="number"
+              placeholder="高さ(px)"
+              value={height}
+              onChange={handleHeightChange}
+              className="border px-2 py-1 rounded w-24"
+            />
 
-          {/*出力形式（PNG, JPEG, WebP）*/}
-          <select
-            value={format}
-            onChange={(e) => setFormat(e.target.value)}
-            className="border px-2 py-1 rounded"
-          >
-            <option value="image/png">PNG</option>
-            <option value="image/jpeg">JPEG</option>
-            <option value="image/webp">WebP</option>
-          </select>
+            {/*出力形式（PNG, JPEG, WebP）*/}
+            <select
+              value={format}
+              onChange={(e) => setFormat(e.target.value)}
+              className="border px-2 py-1 rounded"
+            >
+              <option value="image/png">PNG</option>
+              <option value="image/jpeg">JPEG</option>
+              <option value="image/webp">WebP</option>
+            </select>
 
-          {/*リサイズボタン*/}
-          <button
+            {/*リサイズボタン*/}
+            <button
             onClick={handleResize}
-            className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600"
-            >リサイズ<
-          /button> {/*押したら handleResize を実行して画像を再描画*/}
+              className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600"
+              >リサイズ<
+            /button> {/*押したら handleResize を実行して画像を再描画*/}
+          </div>
+
+          {/*アスペクト比固定スイッチ*/}
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              checked={keepAspectRatio}
+              onChange={() => setKeepAspectRatio(!keepAspectRatio)}
+              id="aspectRatioToggle"
+            /> {/*状態は keepAspectRatio に保存され、幅・高さ入力時に反映される*/}
+            <label htmlFor="aspectRatioToggle" className="text-sm">
+              アスペクト比を固定する
+            </label>
+          </div>
         </div>
       )}
 
