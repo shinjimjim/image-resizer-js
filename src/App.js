@@ -4,11 +4,12 @@ import React, { useState } from 'react'; //React の基本ライブラリを読�
 //React の「コンポーネント」と呼ばれる関数を定義しています。App はトップレベルの画面（メインUI）を表します。
 function App() {
   //useState(null)：初期値を null に設定（最初は画像がない）。更新すると自動的に再レンダリング（Reactが画面を更新）されます。
-  const [imageSrc, setImageSrc] = useState(null); //imageSrc：表示する画像のURL（DataURL）を保存する状態変数。setImageSrc はその状態を更新するための 関数。
-  const [resizedImage, setResizedImage] = useState(null); //resizedImage：リサイズ後の画像のURL
+  const [imageSrc, setImageSrc] = useState(null); //imageSrc：アップロードされた画像（Base64）のURL（DataURL）を保存する状態変数。setImageSrc はその状態を更新するための関数。
+  const [resizedImage, setResizedImage] = useState(null); //resizedImage：リサイズ後の画像のURL（Base64）
   const [width, setWidth] = useState('');
   const [height, setHeight] = useState(''); //width / height：リサイズ時に入力するサイズ
-  const [fileName, setFileName] = useState('resized-image.png');
+  const [format, setFormat] = useState('image/png'); // 出力形式
+  const [fileName, setFileName] = useState('resized-image'); //保存時のファイル名（拡張子なし）
 
   //画像ファイルの読み込み処理
   const handleFileChange = (e) => { //画像ファイルが選ばれたときに呼ばれる関数。
@@ -34,16 +35,28 @@ function App() {
     const img = new Image(); //Image オブジェクトに元画像を読み込み
     img.src = imageSrc;
     img.onload = () => {
-      const canvas = document.createElement('canvas'); //<canvas> を使って新しいサイズで描画
+      const canvas = document.createElement('canvas'); //<canvas> を使って新しいサイズで描画し、指定サイズでスケーリング
       canvas.width = parseInt(width);
       canvas.height = parseInt(height);
 
       const ctx = canvas.getContext('2d'); //canvas.getContext("2d")：2DグラフィックスAPIを取得（ペンのような役割）
       ctx.drawImage(img, 0, 0, canvas.width, canvas.height); //画像を指定サイズで描画（スケーリング）
 
-      const resizedDataUrl = canvas.toDataURL('image/png'); //canvas.toDataURL()：canvas上の画像をBase64に変換（→再び<img>に使える）再エンコードして結果を取得
+      const resizedDataUrl = canvas.toDataURL(format); //canvas.toDataURL()：canvas上の画像をBase64に変換（→再び<img>に使える）再エンコードして結果を取得
       setResizedImage(resizedDataUrl);
     };
+  };
+
+  //拡張子判定ロジック
+  const getExtension = () => {
+    switch (format) {
+      case 'image/jpeg':
+        return 'jpg';
+      case 'image/webp':
+        return 'webp';
+      default:
+        return 'png';
+    }
   };
 
   //JSX（HTMLに似たReactの構文）で、画面に表示する内容を定義しています。
@@ -92,6 +105,19 @@ function App() {
             onChange={(e) => setHeight(e.target.value)}
             className="border px-2 py-1 rounded w-24"
           />
+
+          {/*出力形式（PNG, JPEG, WebP）*/}
+          <select
+            value={format}
+            onChange={(e) => setFormat(e.target.value)}
+            className="border px-2 py-1 rounded"
+          >
+            <option value="image/png">PNG</option>
+            <option value="image/jpeg">JPEG</option>
+            <option value="image/webp">WebP</option>
+          </select>
+
+          {/*リサイズボタン*/}
           <button
             onClick={handleResize}
             className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600"
@@ -111,15 +137,17 @@ function App() {
             className="max-w-full h-auto rounded shadow"
           />
 
+          {/*ファイル名の入力*/}
           <div className="mt-2">
             <input
               type="text"
               value={fileName}
               onChange={(e) => setFileName(e.target.value)}
               className="border px-3 py-1 rounded w-full"
-              placeholder="保存ファイル名（例：my-image.png）"
+              placeholder="保存ファイル名（拡張子なし）"
             />
-            <a href={resizedImage} download={fileName}>
+            {/*ダウンロードリンク*/}
+            <a href={resizedImage} download={`${fileName}.${getExtension()}`}>
               <button className="mt-2 bg-green-500 text-white px-4 py-1 rounded hover:bg-green-600">画像をダウンロード</button>
             </a>
           </div>
