@@ -10,6 +10,8 @@ function App() {
   const [height, setHeight] = useState(''); //width / height：リサイズ時に入力するサイズ
   const [format, setFormat] = useState('image/png'); // 出力形式
   const [fileName, setFileName] = useState('resized-image'); //保存時のファイル名（拡張子なし）
+  const [originalWidth, setOriginalWidth] = useState(null);
+  const [originalHeight, setOriginalHeight] = useState(null); //元画像のサイズ（読み込み時に取得）
 
   //画像ファイルの読み込み処理
   const handleFileChange = (e) => { //画像ファイルが選ばれたときに呼ばれる関数。
@@ -18,13 +20,40 @@ function App() {
 
     //FileReader：Web API。画像ファイルを「Base64形式のURL（Data URL）」として読み込めます。これにより画像を <img src="..."> で表示できるようになります。
     const reader = new FileReader();
-    //ファイルの読み込みが完了したときに呼ばれる処理です。
+    //ファイルの読み込みが完了したときに呼ばれる処理です。画像を読み込み、読み込まれた画像の元サイズ（幅/高さ）を取得。アスペクト比の元になる値として使います。
     reader.onload = () => {
+      const img = new Image();
+      img.src = reader.result;
+      img.onload = () => {
+        setOriginalWidth(img.width);
+        setOriginalHeight(img.height);
+      };
+
       setImageSrc(reader.result); //reader.result は Base64形式の画像データ（Data URL）で、imageSrc に保存します。
       setResizedImage(null); // 新しい画像を選んだら前の結果はリセット
     };
     //ファイルをBase64形式のURLに変換して読み込みます。
     reader.readAsDataURL(file);
+  };
+
+  const handleWidthChange = (e) => {
+    const newWidth = e.target.value;
+    setWidth(newWidth);
+
+    if (originalWidth && originalHeight && newWidth) {
+      const aspectRatio = originalHeight / originalWidth;
+      setHeight(Math.round(newWidth * aspectRatio)); //ユーザーが幅だけ入力した場合、高さをアスペクト比から自動計算します。
+    }
+  };
+
+  const handleHeightChange = (e) => {
+    const newHeight = e.target.value;
+    setHeight(newHeight);
+
+    if (originalWidth && originalHeight && newHeight) {
+      const aspectRatio = originalWidth / originalHeight;
+      setWidth(Math.round(newHeight * aspectRatio)); //逆に高さを入力した場合も同様に、幅を自動計算します。
+    }
   };
 
   // 画像をリサイズする関数
@@ -95,14 +124,14 @@ function App() {
             type="number"
             placeholder="幅(px)"
             value={width}
-            onChange={(e) => setWidth(e.target.value)}
+            onChange={handleWidthChange}
             className="border px-2 py-1 rounded w-24"
           />
           <input
             type="number"
             placeholder="高さ(px)"
             value={height}
-            onChange={(e) => setHeight(e.target.value)}
+            onChange={handleHeightChange}
             className="border px-2 py-1 rounded w-24"
           />
 
