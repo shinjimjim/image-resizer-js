@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react'; //React の基本ライブラリを読み込みます。
+import { Helmet } from 'react-helmet';
 //useState は「状態（state）」を管理するための React の関数（フック）です。これは、関数コンポーネント内で状態（変数のようなもの）を保持・更新できるようにする仕組みです。
 //useRef：画像サイズ取得用に画像をDOMに直接アクセスするために使用。
 
@@ -107,6 +108,14 @@ function App() {
   //JSX（HTMLに似たReactの構文）で、画面に表示する内容を定義しています。
   return (
     <div className="p-6 max-w-md mx-auto"> {/*全体を囲むボックス。Tailwind CSSで余白（p-6）・最大幅（max-w-md）・中央寄せ（mx-auto）を指定。*/}
+      <Helmet>
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4576810240385912"
+          crossOrigin="anonymous"
+        ></script>
+      </Helmet>
+
       <h1 className="text-2xl font-bold mb-4">画像アップロード ＆ リサイズ</h1> {/*タイトル。文字サイズ（text-2xl）、太字（font-bold）、下マージン（mb-4）。*/}
 
       {/* ファイル選択 */}{/*accept="image/*" で画像だけ選べるようにしています。onChange={handleFileChange} で画像が選ばれたときに関数が呼ばれます。*/}
