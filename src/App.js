@@ -237,6 +237,10 @@ function App() {
           </div>
         </div>
       )}
+      <footer className="mt-10 text-sm text-center text-gray-500">
+        <a href="/privacy.html" className="underline">プライバシーポリシー</a>
+        <a href="/terms.html" className="underline mx-2">利用規約</a>
+      </footer>
     </div>
   );
 }
