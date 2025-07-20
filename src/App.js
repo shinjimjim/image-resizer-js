@@ -164,11 +164,7 @@ function App() {
             </select>
 
             {/*リサイズボタン*/}
-            <button
-            onClick={handleResize}
-              className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600"
-              >リサイズ<
-            /button> {/*押したら handleResize を実行して画像を再描画*/}
+            <button onClick={handleResize} className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600">リサイズ</button> {/*押したら handleResize を実行して画像を再描画*/}
           </div>
 
           {/*アスペクト比固定スイッチ*/}
