@@ -109,11 +109,8 @@ function App() {
   return (
     <div className="p-6 max-w-md mx-auto"> {/*全体を囲むボックス。Tailwind CSSで余白（p-6）・最大幅（max-w-md）・中央寄せ（mx-auto）を指定。*/}
       <Helmet>
-        <script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4576810240385912"
-          crossOrigin="anonymous"
-        ></script>
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4576810240385912"
+          crossorigin="anonymous"></script>
       </Helmet>
 
       <h1 className="text-2xl font-bold mb-4">画像アップロード ＆ リサイズ</h1> {/*タイトル。文字サイズ（text-2xl）、太字（font-bold）、下マージン（mb-4）。*/}
