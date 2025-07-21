@@ -239,6 +239,39 @@ function App() {
           </div>
         </div>
       )}
+
+      {/* 紹介文・ガイド・Q&A */}
+      <section className="mt-10 border-t pt-6">
+        <h2 className="text-xl font-semibold mb-2">このアプリについて</h2>
+          <p className="text-gray-700">
+            このツールは、画像をオンラインで簡単にリサイズ・圧縮・形式変換（PNG / JPEG / WebP）できる無料アプリです。
+            アスペクト比の自動維持、品質調整、ファイル名の指定など、細かい調整も可能です。
+          </p>
+        <h2 className="text-xl font-semibold mb-2">使い方ガイド</h2>
+          <ol className="list-decimal pl-5 text-gray-700 space-y-1">
+            <li>画像ファイル（PNG / JPEG / WebPなど）をアップロード</li>
+            <li>幅・高さや出力形式を指定</li>
+            <li>必要に応じて「アスペクト比固定」や「JPEG品質」を調整</li>
+            <li>「リサイズ」ボタンを押す</li>
+            <li>下部の「画像をダウンロード」ボタンで保存</li>
+          </ol>
+        <h2 className="text-xl font-semibold mb-2">よくある質問（Q&A）</h2>
+          <div className="space-y-4 text-gray-700">
+            <div>
+              <strong>Q. ブラウザから画像は送信されますか？</strong><br />
+              A. いいえ。画像処理はすべてお使いのブラウザ内で完結します。サーバーに送信されることはありません。
+            </div>
+            <div>
+              <strong>Q. 画像サイズに制限はありますか？</strong><br />
+              A. 通常のブラウザで扱えるサイズ（数MB以内）であれば問題ありません。
+            </div>
+            <div>
+              <strong>Q. WebPとは何ですか？</strong><br />
+              A. Googleが開発した高圧縮・高画質な画像形式です。対応ブラウザで使用できます。
+            </div>
+          </div>
+      </section>
+      
       <footer className="mt-10 text-sm text-center text-gray-500">
         <a href="/privacy.html" className="underline">プライバシーポリシー</a>
         <a href="/terms.html" className="underline mx-2">利用規約</a>
