@@ -113,7 +113,23 @@ function App() {
           crossorigin="anonymous"></script>
       </Helmet>
 
-      <h1 className="text-2xl font-bold mb-4">画像アップロード ＆ リサイズ</h1> {/*タイトル。文字サイズ（text-2xl）、太字（font-bold）、下マージン（mb-4）。*/}
+      <h1 className="text-2xl font-bold mb-4">画像リサイズ＆変換ツール</h1> {/*タイトル。文字サイズ（text-2xl）、太字（font-bold）、下マージン（mb-4）。*/}
+
+      <div className="mt-6 text-sm text-gray-800 leading-relaxed">
+        <h2 className="text-lg font-bold mb-2">画像リサイズ＆変換ツールとは？</h2>
+        <p className="mb-2">
+          このツールは、ブラウザ上で簡単に画像をリサイズ・圧縮・形式変換（PNG, JPEG, WebP）できる無料のオンラインツールです。
+          ソフトのインストールや会員登録は不要で、画像を選択して幅・高さ・形式を指定するだけで、高品質な変換処理が行えます。
+        </p>
+        <p className="mb-2">
+          また、アスペクト比の自動保持やJPEGの品質指定、ファイルサイズの表示、ファイル名変更、画像のダウンロードなど多くの機能を搭載。
+          スマホ・PCの両方で使用可能で、セキュリティ面にも配慮して画像はサーバーには保存されません。
+        </p>
+        <p>
+          ご利用にあたっては<a href="/privacy.html" className="underline text-blue-600">プライバシーポリシー</a>および
+          <a href="/terms.html" className="underline text-blue-600 ml-1">利用規約</a>をご確認ください。
+        </p>
+      </div>
 
       {/* ファイル選択 */}{/*accept="image/*" で画像だけ選べるようにしています。onChange={handleFileChange} で画像が選ばれたときに関数が呼ばれます。*/}
       <input
