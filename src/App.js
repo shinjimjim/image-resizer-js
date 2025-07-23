@@ -17,6 +17,7 @@ function App() {
   const [keepAspectRatio, setKeepAspectRatio] = useState(true); //アスペクト比固定 ON/OFF のスイッチ
   const [quality, setQuality] = useState(0.92); // デフォルト品質（ブラウザ標準）quality：JPEG/WebPの場合の画質。
   const [resizedSize, setResizedSize] = useState(null); // 圧縮後のファイルサイズ（バイト数を保持）
+  const [downloaded, setDownloaded] = useState(false);
 
   const originalImageRef = useRef(null); //useRef：直接画像DOM要素にアクセスしたいときに使用。
 
@@ -103,6 +104,19 @@ function App() {
       default:
         return 'png';
     }
+  };
+
+  // ✅ ダウンロード処理とメッセージ表示
+  const handleDownload = () => {
+    const link = document.createElement('a');
+    link.href = resizedImage;
+    link.download = `${fileName}.${getExtension()}`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    setDownloaded(true);
+    setTimeout(() => setDownloaded(false), 10000); // 10秒で非表示
   };
 
   //JSX（HTMLに似たReactの構文）で、画面に表示する内容を定義しています。
@@ -248,10 +262,16 @@ function App() {
               ファイルサイズ: {(resizedSize / 1024).toFixed(2)} KB（{(resizedSize / 1024 / 1024).toFixed(2)} MB）
             </p>
 
-            {/*ダウンロードリンク*/}
-            <a href={resizedImage} download={`${fileName}.${getExtension()}`}>
-              <button className="mt-2 bg-green-500 text-white px-4 py-1 rounded hover:bg-green-600">画像をダウンロード</button>
-            </a>
+            <button onClick={handleDownload} className="mt-2 bg-green-500 text-white px-4 py-1 rounded hover:bg-green-600">画像をダウンロード</button>
+
+            {/* ✅ ダウンロード完了メッセージ */}
+            {downloaded && (
+              <div className="mt-3 flex justify-center">
+                <p className="text-emerald-600 text-lg font-semibold flex items-center gap-2">
+                  ✅ <span>画像を保存しました！</span>
+                </p>
+              </div>
+            )}
           </div>
         </div>
       )}
