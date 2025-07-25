@@ -9,6 +9,30 @@ export default function handler(req, res) {
     <priority>1.0</priority>
   </url>
   <url>
+    <loc>https://image-resizer-js.vercel.app/about.html</loc>
+    <lastmod>2025-07-26</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://image-resizer-js.vercel.app/guide.html</loc>
+    <lastmod>2025-07-26</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://image-resizer-js.vercel.app/faq.html</loc>
+    <lastmod>2025-07-26</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://image-resizer-js.vercel.app/contact.html</loc>
+    <lastmod>2025-07-26</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://image-resizer-js.vercel.app/privacy.html</loc>
     <lastmod>2025-07-26</lastmod>
     <changefreq>yearly</changefreq>
